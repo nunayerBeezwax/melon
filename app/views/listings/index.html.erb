@@ -1,0 +1,8 @@
+Here's da home.
+
+<%= link_to "Make a new Listing", new_listing_path %>
+
+<% @listings.where(listed?: false).each do |l| %>
+  <p><%= l.card + " x" + l.number.to_s + "      " %><%= link_to "Preview", listing_path(l) %> </p>
+
+<% end %>

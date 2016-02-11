@@ -1,0 +1,24 @@
+<%= form_for @listing do |f| %>
+  <%= f.label :card %>:
+  <%= f.text_field :card %><br />
+
+  <%= f.label :series %>:
+  <%= f.text_field :series %><br />
+
+  <%= f.label :number %>:
+  <%= f.text_field :number %><br />
+
+  <%= f.label :quantity %>:
+  <%= f.number_field :quantity %><br />
+
+  <%= f.label :price %>:
+  <%= f.text_field :price %><br />
+
+  <%= f.label :category %>:
+  <%= f.number_field :category %><br />
+
+  <%= f.label :condition %>:
+  <%= f.text_field :condition %><br />
+
+  <%= f.submit %>
+<% end %>
