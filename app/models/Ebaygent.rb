@@ -11,6 +11,7 @@ class Ebaygent
     "ShippingService-1:Option=USPSFirstClass",
     "ShippingService-1:Cost=0",
     "ShippingService-1:FreeShipping=1",
+    "ShippingService-1:AdditionalCost=0",
     "IntlShippingService-1:Option=USPSFirstClassMailInternational",
     "IntlShippingService-1:Cost=2",
     "IntlShippingService-1:AdditionalCost=0",
@@ -42,7 +43,7 @@ class Ebaygent
         array = [action, l.make_category, l.make_pic_url, l.make_title, l.make_description, l.quantity, l.price]
         csv << array
         # technically false, it has only been put in the csv, not put on ebay... should fix?
-        l.update_column(:listed?, true)
+        l.update_column(:listed?, true) if action == "Add"
       end
     end
   end

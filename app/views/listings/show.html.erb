@@ -13,11 +13,11 @@
   <div class="listing">
     <div class="item" style="width:50%;padding: 6em 0 3em 6em;float:left;text-align:center">
       <font face="Merriweather" size="8">
-        <p><%= self.card + " x" + self.number.to_s %></p>
+        <p><%= @listing.card + " x" + @listing.number.to_s %></p>
         <!-- <p> Utvara Hellkite x4 </p> -->
-        <p>Series: <%= self.series %></p>
+        <p>Series: <%= @listing.series %></p>
         <!-- <p> Series: Return to Ravnica </p> -->
-        <p>Condition: <%= self.full_condition %></p>
+        <p>Condition: <%= @listing.full_condition %></p>
         <!-- <p> Condition: Near Mint </p> -->
         <font size="6">
           <p><a style="color:blue;text-decoration:none" href="http://stores.ebay.com/the-awkward-melon?_rdc=1">The Awkward Melon's eBay Store</a></p>
@@ -37,7 +37,7 @@
               <h2>Customer Service</h2>
               <p>*</p>
               <p>The Awkward Melon has the best service in the business.</p>
-              <p>Email me at awkwardmelon@gmail.com or contact through the eBay message system.</p>
+              <p>Contact through the eBay message system.</p>
               <p>I will do whatever it takes to make you satisfied with your order!</p>
             </font>
           </div>
@@ -45,7 +45,7 @@
       </font>
     </div>
     <div class="image" style="display:block; width:40%; float:right; padding:6em 0">
-      <img src=<%= self.make_pic_url %> border="0">
+      <img src=<%= @listing.make_pic_url %> border="0">
     </div>
   </div>
 
@@ -58,7 +58,7 @@
     <div class="purchasing" style="padding:2em;margin:5em;float:right;width:50%;background:linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3))">
       <font size="3" color="white">
         <h1>We're Always Buying!</h1>
-        <p>In order to keep up our inventory, The Awkward Melon is always looking to purchase Magic card singles and collections.  If you're looking to sell, send an email to awkwardmelon@gmail.com and let us know what you have to sell and we will work with you to make a fair deal.</p>
+        <p>In order to keep up our inventory, The Awkward Melon is always looking to purchase Magic card singles and collections.  If you're looking to sell, hit me up over eBay Messages and let us know what you have to sell and we will work with you to make a fair deal.</p>
       </font>
     </div>
   </div>
