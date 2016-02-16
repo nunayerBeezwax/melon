@@ -4,7 +4,7 @@ class ListingsController < ApplicationController
 
   def index
     @listings = Listing.where(listed?: false)
-    @current_value = @listings.map{ |p| p.price * p.quantity}.inject(0, :+)
+    @current_value = @listings.map{ |p| ( p.price || 0 ) * p.quantity}.inject(0, :+)
   end
 
   def new
@@ -17,6 +17,12 @@ class ListingsController < ApplicationController
 
   def create
     @listing = Listing.create(listing_params)
+    redirect_to :root
+  end
+
+  def pricer
+    a = Ebaygent.new
+    a.batch_price(Listing.where(price: nil))
     redirect_to :root
   end
 

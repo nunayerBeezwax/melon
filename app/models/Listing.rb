@@ -1,5 +1,8 @@
 class Listing < ActiveRecord::Base
 
+  # as I get into the autobuying and stuff, might want to set up a relationship where an Ebaytem will belong_to a listing
+  # so I can keep track of how I'm doing
+
   CONDITIONS = {
     'NM': 'Near Mint',
     'EX': 'Excellent',
@@ -24,7 +27,7 @@ class Listing < ActiveRecord::Base
   end
 
   def make_pic_url
-    "http://i825.photobucket.com/albums/zz177/hudson1949/magic/#{self.series.downcase.tr(' ', '_')}/#{self.card.gsub('FOIL', '').gsub(',', '').gsub('\'', '').strip.gsub(' ', '%20')}.jpg"
+    "http://i825.photobucket.com/albums/zz177/hudson1949/magic/#{self.series.downcase.tr(' ', '_').tr('\'', '')}/#{self.card.gsub('FOIL', '').gsub(',', '').gsub('\'', '').strip.gsub(' ', '%20')}.jpg"
   end
 
   def make_category
