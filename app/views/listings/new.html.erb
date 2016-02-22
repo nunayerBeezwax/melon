@@ -1,24 +1,37 @@
-<%= form_for @listing do |f| %>
-  <%= f.label :card %>:
-  <%= f.text_field :card %><br />
+<div class="new-item-form">
+  <%= form_for @listing do |f| %>
+    <%= f.label :card %>:
+    <%= f.text_field :card %><br><div class="spacer"></div>
 
-  <%= f.label :series %>:
-  <%= f.text_field :series %><br />
+    <%= f.label :series %>:
+    <%= f.text_field :series %><br><div class="spacer"></div>
 
-  <%= f.label :number %>:
-  <%= f.text_field :number %><br />
+    <%= f.label :number %>:
+    <%= f.text_field :number %><br><div class="spacer"></div>
 
-  <%= f.label :quantity %>:
-  <%= f.number_field :quantity %><br />
+    <%= f.label :quantity %>:
+    <%= f.number_field :quantity %><br><div class="spacer"></div>
 
-  <%= f.label :color %>:
-  <%= f.text_field :color %><br />
+    <%= f.label :color %>:
+    <%= f.text_field :color %><br><div class="spacer"></div>
 
-  <%= f.label :condition %>:
-  <%= f.text_field :condition %><br />
+    <%= f.label :condition %>:
+    <%= f.text_field :condition %><br><div class="spacer"></div>
 
-  <%= f.submit %>
-<% end %>
+    <% if @listing.type == "lot" %>
+      <%= f.label :notes %>:
+      <%= f.text_field :notes %><br><div class="spacer"></div>
+
+      <%= f.label :price %>:
+      <%= f.text_field :price %><br><div class="spacer"></div>
+    <%end%>
+
+    <%= f.label :foil %>:
+    <%= f.check_box :foil %><br><div class="spacer"></div>
+
+    <div class="submit"><%= f.submit %></div>
+  <% end %>
+</div>
 
 <%# add something to listings like "notes" where you can put additional stuff, and add to the template a place
 where notes render.  so i could add some stuff, espeically to lots and all that %>

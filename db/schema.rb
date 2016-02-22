@@ -11,10 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160211174427) do
+ActiveRecord::Schema.define(version: 20160220213907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cards", force: :cascade do |t|
+    t.string  "mtg_json_id"
+    t.string  "name"
+    t.string  "set"
+    t.string  "artist"
+    t.string  "color"
+    t.string  "mana_cost"
+    t.string  "rarity"
+    t.float   "value"
+    t.string  "set_number"
+    t.float   "foil_value"
+    t.string  "mtg_stocks_id"
+    t.integer "sid"
+  end
 
   create_table "listings", force: :cascade do |t|
     t.string  "card"
@@ -26,6 +41,9 @@ ActiveRecord::Schema.define(version: 20160211174427) do
     t.string  "color"
     t.string  "condition"
     t.boolean "listed?",   default: false
+    t.text    "notes"
+    t.string  "type"
+    t.boolean "foil",      default: false
   end
 
 end

@@ -55,6 +55,87 @@ class Ebaygent
     "Unlimited" => "Unlimited Edition"
   }
 
+  # can't deal with [Duel Decks: Blessed vs. Cursed, Miscellaneous Promos, Special Occasion]
+  MTGSTOCKS_TO_MTGJSON = {
+    "10th Edition" => "Tenth Edition",
+    "7th Edition" => "Seventh Edition",
+    "8th Edition" => "Eighth Edition",
+    "9th Edition" => "Ninth Edition",
+    "Alpha Edition" => "Limited Edition Alpha",
+    "Beta Edition" => "Limited Edition Beta",
+    "Champs Promos" => "Champs and States",
+    "Conspiracy" => "Magic: the Gathering-Conspiracy",
+    "FNM Promos" => "Friday Night Magic",
+    "Game Day Promos" => "Magic Game Day",
+    "Gateway Promos" => "Gateway",
+    "Grand Prix Promos" => "Grand Prix",
+    "Judge Promos" => "Judge Gift Program",
+    "Launch Party Cards" => "Launch Parties",
+    "Magic 2010 (M10)" => "Magic 2010",
+    "Magic 2011 (M11)" => "Magic 2011",
+    "Magic 2012 (M12)" => "Magic 2012",
+    "Magic 2013 (M13)" => "Magic 2013",
+    "Magic 2014 (M14)" => "Magic 2014",
+    "Magic 2015 (M15)" => "Magic 2015",
+    "Media Promos" => "Media Inserts",
+    "Modern Event Deck" => "Modern Event Deck 2014",
+    "Prerelease Cards" => "Prerelease Events",
+    "Pro Tour Promos" => "Pro Tour",
+    "Ravnica" => "Ravnica: City of Guilds",
+    "Release Event Cards" => "Release Events",
+    "WPN Promos" => "World Magic Cup Qualifiers",
+    "Zendikar Expedition" => "Zendikar Expeditions"
+  }
+
+  # can't deal with [Duel Decks: Blessed vs. Cursed, Miscellaneous Promos, Special Occasion]
+  TCGPLAYER_TO_MTGJSON = {
+    "Ravnica" => "Ravnica: City of Guilds",
+    "Magic 2010 (M10)" => "Magic 2010",
+    "Magic 2011 (M11)" => "Magic 2011",
+    "Magic 2012 (M12)" => "Magic 2012",
+    "Magic 2013 (M13)" => "Magic 2013",
+    "Magic 2014 (M14)" => "Magic 2014",
+    "Magic 2015 (M15)" => "Magic 2015",
+    "Sixth Edition" => "Classic Sixth Edition",
+    "Alpha Edition" => "Limited Edition Alpha",
+    "Beta Edition" => "Limited Edition Beta",
+    "Anthology" => "Duel Decks: Anthology",
+    "Zendikar vs. Eldrazi" => "Duel Decks: Zendikar vs. Eldrazi",
+    "Elspeth vs. Kiora" => "Duel Decks: Elspeth vs. Kiora",
+    "Speed vs. Cunning" => "Duel Decks: Speed vs. Cunning",
+    "Ajani vs. Nicol Bolas" => "Duel Decks: Ajani vs. Nicol Bolas",
+    "Divine vs. Demonic" => "Duel Decks: Divine vs. Demonic",
+    "Elspeth vs. Tezzeret" => "Duel Decks: Elspeth vs. Tezzeret",
+    "Elves vs. Goblins" => "Duel Decks: Elves vs. Goblins",
+    "Garruk vs. Liliana" => "Duel Decks: Garruk vs. Liliana",
+    "Heroes vs. Monsters" => "Duel Decks: Heroes vs. Monsters",
+    "Izzet vs. Golgari" => "Duel Decks: Izzet vs. Golgari",
+    "Jace vs. Chandra" => "Duel Decks: Jace vs. Chandra",
+    "Jace vs. Vraska" => "Duel Decks: Jace vs. Vraska",
+    "Knights vs. Dragons" => "Duel Decks: Knights vs. Dragons",
+    "Sorin vs. Tibalt" => "Duel Decks: Sorin vs. Tibalt",
+    "Venser vs. Koth" => "Duel Decks: Venser vs. Koth",
+    "PDS: Graveborn" => "Premium Deck Series: Graveborn",
+    "PDS: Fire and Lightning" => "Premium Deck Series: Fire and Lightning",
+    "PDS: Slivers" => "Premium Deck Series: Slivers",
+    "Champs Promos" => "Champs and States",
+    "FNM Promos" => "Friday Night Magic",
+    "Game Day Promos" => "Magic Game Day",
+    "Gateway Promos" => "Gateway",
+    "Grand Prix Promos" => "Grand Prix",
+    "Judge Promos" => "Judge Gift Program",
+    "Launch Party Cards" => "Launch Parties",
+    "Media Promos" => "Media Inserts",
+    "Guru Lands" => "Guru",
+    "European Lands" => "Eurpoean Land Program",
+    "JSS/MSS Promos" => "Super Series",
+    "Magic Modern Event Deck" => "Modern Event Deck 2014",
+    "Prerelease Cards" => "Prerelease Events",
+    "Pro Tour Promos" => "Pro Tour",
+    "Ravnica" => "Ravnica: City of Guilds",
+    "Release Event Cards" => "Release Events",
+    "WPN Promos" => "World Magic Cup Qualifiers"
+  }
 
   def make_singles_csv(action)
     CSV.open("listings_#{Time.now.to_i}.csv", "wb") do |csv|
@@ -86,14 +167,44 @@ class Ebaygent
     low = driver.find_element(:class, "low").text.gsub("$", "").to_f
     average = driver.find_element(:class, "average").text.gsub("$", "").to_f
     high = driver.find_element(:class, "high").text.gsub("$", "").to_f
+    begin
+      foil = driver.find_element(:class, "foilprice").text.gsub("$", "").to_f
+    rescue Selenium::WebDriver::Error::NoSuchElementError
+      foil = "No Foil Exists"
+    end
+    driver.close
+    prices = { low: low, average: average, high: high, foil: foil }
+    return OpenStruct.new prices
+  end
+
+  def price_card_from_db(card)
+    driver = Selenium::WebDriver.for(:firefox)
+    driver.get("http://mtgstocks.com/sets")
+    nav = driver.find_element(:class, "navbar")
+    driver.execute_script("arguments[0].style.display='none'", nav)
+    series = MTGSTOCKS_SET_EXCEPTIONS.keys.include?(card.set) ? MTGSTOCKS_SET_EXCEPTIONS["#{card.set}"] : card.set
+    set_link = driver.find_element(:link_text, series)
+    set_link.click
+    nav = driver.find_element(:class, "navbar")
+    driver.execute_script("arguments[0].style.display='none'", nav)
+    card_link = driver.find_element(:link_text, card.name)
+    card_link.click
+    low = driver.find_element(:class, "low").text.gsub("$", "").to_f
+    average = driver.find_element(:class, "average").text.gsub("$", "").to_f
+    high = driver.find_element(:class, "high").text.gsub("$", "").to_f
     driver.close
     prices = { low: low, average: average, high: high }
+    card.update_column(:value, prices[:average])
     return OpenStruct.new prices
   end
 
   def price_listing(listing)
     tcg_prices = get_prices(listing)
-    guide_price = tcg_prices.average * listing.number
+    if !listing.foil
+      guide_price = tcg_prices.average * listing.number
+    else
+      guide_price = tcg_prices.foil * listing.number
+    end
     guide_price.ceil.to_f - 0.01
   end
 
@@ -200,6 +311,141 @@ class Ebaygent
       end
     end
     snipes
+  end
+
+  def price_a_set(setname)
+
+  end
+
+
+
+
+## stealing TCGPlayer API calls through magiccards.info = mech.get("http://partner.tcgplayer.com/x3/mchl.ashx?pk=MAGCINFO&sid=86")
+## 86 seems to be the first one
+## tcg ids:  [MTGSTCKS, MAGCINFO, SLICKCOLL]
+
+## mtgstocks seems to go from = "http://mtgstocks.com/cards/1-30497"
+
+  def stock_scraper
+    range = [*20000..20010]
+    bad_pages = {}
+    successful_entries = 0
+    mech = Mechanize.new
+    mech.user_agent = "Melon MTG Pricescraper v0.1 - awkwardmelon@gmail.com - Please contact if the behavior of this bot is found to be problematic in any way."
+    range.shuffle.each do |n|
+      begin
+        page = mech.get("http://mtgstocks.com/cards/#{n}")
+      rescue Exception => e
+        bad_pages["#{n}"] = e
+        next
+      end
+      if page.code == "200"
+        id = page.uri.path.scan(/\d+/).first.to_i
+        card = page.at("title").text.chomp(" - MTGStocks.com")
+        set = page.at(".indent").at("a").text
+        price = page.at(".average").text.delete("$").to_f
+        # what if it doesn't have .foilprice?
+        foilprice = page.at(".foilprice").text.delete("$").to_f
+        db_card = Card.where(name: card, set: get_scrape_set(set)).first
+        db_card.update_column(:value, price)
+        db_card.update_column(:foil_value, foilprice)
+        if db_card.mtg_stocks_id == nil
+          db_card.update_column(:mtg_stocks_id, id)
+        end
+        successful_entries += 1
+      end
+      sleep(rand(1.0..2.0))
+    end
+    puts bad_pages
+    puts "Successful Entries = " + successful_entries.to_s
+    puts Card.where(mtg_stocks_id: nil).count.to_s + "Unfinished Cards in DB"
+  end
+
+  def get_scrape_set(set)
+    MTG_JSON_SETS.include?(set) ? set : MTGSTOCKS_TO_MTGJSON["#{set}"]
+  end
+
+  def get_api_set(set)
+    MTG_JSON_SETS.include?(set) ? set : TCGPLAYER_TO_MTGJSON["#{set}"]
+  end
+
+  def tcg_price_update(range)
+    pks = ["MTGSTCKS", "MAGCINFO"]
+    base_url = "http://partner.tcgplayer.com/x3/mchl.ashx?pk=#{pks[1]}&sid="
+    sids_found = []
+    not_sids = []
+    updated_cards = []
+    problems = {}
+    call_range = range
+    loop_food = call_range - NOT_SIDS
+    loop_food.each do |num|
+      begin
+        res = HTTParty.get(base_url + "#{num.to_s}")
+        if res.include?("magic")
+          sids_found << num
+          info = res.scan(/store.tcgplayer.com.*?\?/).first.split("\/")
+          set = get_api_set(info[-2].tr("-", " ").titlecase)
+          card = info[-1].tr("-", " ").chomp("?").titlecase
+          db_card = Card.where(name: card, set: set)
+          price = res.scan(/\$\d*.\d*/)[1]
+          if price == nil
+            price = 0
+          else
+            price = price.delete("$").to_f
+          end
+          if db_card == []
+            binding.pry
+          else
+            db_card.update_all(sid: num, value: price)
+            updated_cards << db_card
+          end
+        else
+          not_sids << num
+          @not_sids |= [num]
+        end
+        call_range.delete(num)
+      rescue e
+        problems[num] = e
+        next
+      end
+    end
+
+    File.open('./public/WorkingSids.rb', 'w') do |f|
+      f.write(JSON.dump(sids_found))
+    end
+
+    File.open('./public/UpdatedCards.rb', 'w') do |f|
+      f.write(JSON.dump(updated_cards.map{|c| [c.name, c.set]}))
+    end
+
+    File.open('./public/NotSids.rb', 'w') do |f|
+      f.write(JSON.dump(not_sids))
+    end
+
+    puts not_sids.count.to_s + "Empty Response"
+    puts sids_found.count.to_s + "Full Response"
+    puts updated_cards.count.to_s + "Updated Cards"
+  end
+
+
+  ## Should not need often or ever again...
+  def make_card_db
+    data = {}
+    card_params = {}
+    File.open("AllSets.json") do |f|
+      data = JSON.parse(f.read)
+    end
+    data.each do |set|
+      current_set = set.second["name"]
+      set.second["cards"].each do |card|
+        card_params["set"] = current_set
+        card_params["name"] = card["name"]
+        card_params["mtg_json_id"] = card["id"]
+        card_params["rarity"] = card["rarity"]
+        card_params["set_number"] = card["mciNumber"]
+        Card.create(card_params)
+      end
+    end
   end
 
 end

@@ -29,6 +29,8 @@ gem 'nokogiri'
 gem 'httparty'
 gem 'selenium-webdriver'
 gem 'rebay'
+gem 'mechanize'
+gem 'json'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

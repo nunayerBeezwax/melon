@@ -1,11 +1,23 @@
-Here's da home.
+<link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet' type='text/css'>
 
-<%= link_to "Make a new Listing", new_listing_path %>
+<div class='wrapper' style='height:100%;background-color:#e5e5e5;overflow:hidden'>
 
-<% @listings.each do |l| %>
-  <p><%= l.card + " x" + l.number.to_s + " " + l.series %><%= " Quantity = " + l.quantity.to_s + " " %><%= link_to "Preview ", listing_path(l) %> <%= l.price || "0" %></p>
-<% end %>
 
-<h3><%= "Value so far = " + '%.2f' % @current_value.to_s + " On " + @listings.count.to_s + " auctions" %></h3>
+  <div class="make-buttons">
+    <%= link_to "Make a new Singles Listing", new_listing_path, {class: "create-button"} %><br>
+    <%= link_to "Make a new Lot Listing", { controller: "listings", action: "new", lot: true }, {class: "create-button"} %>
+  </div>
 
-<button><%= button_to "Price 'em", price_listings_path %></button>
+  <div class="queue">
+    <h2>Queued Listings</h2>
+    <% @listings.each do |l| %>
+      <p><%= link_to "Preview", listing_path(l) %><%= " || " + l.make_title + " " %><%= " || " + "Price:" + " " + l.price.to_s if l.price %></p>
+    <% end %>
+  </div>
+
+  <div class="current-totals">
+    <h3><%= "Value so far = " + '%.2f' % @current_value.to_s + " On " + @listings.count.to_s + " auctions And " + @current_quantity.to_s + " Total Items" %></h3>
+  </div>
+
+  <button><%= button_to "Price 'em", price_listings_path %></button>
+</div>
