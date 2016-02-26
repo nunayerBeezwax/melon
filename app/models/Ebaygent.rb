@@ -88,54 +88,59 @@ class Ebaygent
   }
 
   # can't deal with [Duel Decks: Blessed vs. Cursed, Miscellaneous Promos, Special Occasion]
-  TCGPLAYER_TO_MTGJSON = {
-    "Ravnica" => "Ravnica: City of Guilds",
-    "Magic 2010 (M10)" => "Magic 2010",
-    "Magic 2011 (M11)" => "Magic 2011",
-    "Magic 2012 (M12)" => "Magic 2012",
-    "Magic 2013 (M13)" => "Magic 2013",
-    "Magic 2014 (M14)" => "Magic 2014",
-    "Magic 2015 (M15)" => "Magic 2015",
-    "Sixth Edition" => "Classic Sixth Edition",
-    "Alpha Edition" => "Limited Edition Alpha",
-    "Beta Edition" => "Limited Edition Beta",
-    "Anthology" => "Duel Decks: Anthology",
-    "Zendikar vs. Eldrazi" => "Duel Decks: Zendikar vs. Eldrazi",
-    "Elspeth vs. Kiora" => "Duel Decks: Elspeth vs. Kiora",
-    "Speed vs. Cunning" => "Duel Decks: Speed vs. Cunning",
-    "Ajani vs. Nicol Bolas" => "Duel Decks: Ajani vs. Nicol Bolas",
-    "Divine vs. Demonic" => "Duel Decks: Divine vs. Demonic",
-    "Elspeth vs. Tezzeret" => "Duel Decks: Elspeth vs. Tezzeret",
-    "Elves vs. Goblins" => "Duel Decks: Elves vs. Goblins",
-    "Garruk vs. Liliana" => "Duel Decks: Garruk vs. Liliana",
-    "Heroes vs. Monsters" => "Duel Decks: Heroes vs. Monsters",
-    "Izzet vs. Golgari" => "Duel Decks: Izzet vs. Golgari",
-    "Jace vs. Chandra" => "Duel Decks: Jace vs. Chandra",
-    "Jace vs. Vraska" => "Duel Decks: Jace vs. Vraska",
-    "Knights vs. Dragons" => "Duel Decks: Knights vs. Dragons",
-    "Sorin vs. Tibalt" => "Duel Decks: Sorin vs. Tibalt",
-    "Venser vs. Koth" => "Duel Decks: Venser vs. Koth",
-    "PDS: Graveborn" => "Premium Deck Series: Graveborn",
-    "PDS: Fire and Lightning" => "Premium Deck Series: Fire and Lightning",
-    "PDS: Slivers" => "Premium Deck Series: Slivers",
-    "Champs Promos" => "Champs and States",
-    "FNM Promos" => "Friday Night Magic",
-    "Game Day Promos" => "Magic Game Day",
-    "Gateway Promos" => "Gateway",
-    "Grand Prix Promos" => "Grand Prix",
-    "Judge Promos" => "Judge Gift Program",
-    "Launch Party Cards" => "Launch Parties",
-    "Media Promos" => "Media Inserts",
-    "Guru Lands" => "Guru",
-    "European Lands" => "Eurpoean Land Program",
-    "JSS/MSS Promos" => "Super Series",
-    "Magic Modern Event Deck" => "Modern Event Deck 2014",
-    "Prerelease Cards" => "Prerelease Events",
-    "Pro Tour Promos" => "Pro Tour",
-    "Ravnica" => "Ravnica: City of Guilds",
-    "Release Event Cards" => "Release Events",
-    "WPN Promos" => "World Magic Cup Qualifiers"
-  }
+  TCGPLAYER_TO_MTGJSON = {"magic 2010 (m10)"=>"Magic 2010",
+     "magic 2011 m11"=>"Magic 2011",
+     "magic 2012 m12"=>"Magic 2012",
+     "magic 2013 m13"=>"Magic 2013",
+     "magic 2014 m14"=>"Magic 2014",
+     "magic 2015 m15"=>"Magic 2015",
+     "sixth edition"=>"Classic Sixth Edition",
+     "7th edition"=>"Seventh Edition",
+     "8th edition"=>"Eighth Edition",
+     "9th edition"=>"Ninth Edition",
+     "10th edition"=>"Tenth Edition",
+     "alpha edition"=>"Limited Edition Alpha",
+     "beta edition"=>"Limited Edition Beta",
+     "anthology"=>"Duel Decks: Anthology",
+     "duel decks zendikar vs eldrazi"=>"Duel Decks: Zendikar vs. Eldrazi",
+     "duel decks elspeth vs kiora"=>"Duel Decks: Elspeth vs. Kiora",
+     "duel decks speed vs cunning"=>"Duel Decks: Speed vs. Cunning",
+     "duel decks ajani vs nicol bolas"=>"Duel Decks: Ajani vs. Nicol Bolas",
+     "duel decks divine vs demonic"=>"Duel Decks: Divine vs. Demonic",
+     "duel decks elspeth vs tezzeret"=>"Duel Decks: Elspeth vs. Tezzeret",
+     "duel decks elves vs goblins"=>"Duel Decks: Elves vs. Goblins",
+     "duel decks garruk vs liliana"=>"Duel Decks: Garruk vs. Liliana",
+     "duel decks heroes vs monsters"=>"Duel Decks: Heroes vs. Monsters",
+     "duel decks izzet vs golgari"=>"Duel Decks: Izzet vs. Golgari",
+     "duel decks jace vs chandra"=>"Duel Decks: Jace vs. Chandra",
+     "duel decks jace vs vraska"=>"Duel Decks: Jace vs. Vraska",
+     "duel decks knights vs dragons"=>"Duel Decks: Knights vs. Dragons",
+     "duel decks sorin vs tibalt"=>"Duel Decks: Sorin vs. Tibalt",
+     "duel decks venser vs koth"=>"Duel Decks: Venser vs. Koth",
+     "pds: graveborn"=>"Premium Deck Series: Graveborn",
+     "pds: fire and lightning"=>"Premium Deck Series: Fire and Lightning",
+     "pds: slivers"=>"Premium Deck Series: Slivers",
+     "champs promos"=>"Champs and States",
+     "fnm promos"=>"Friday Night Magic",
+     "game day promos"=>"Magic Game Day",
+     "gateway promos"=>"Gateway",
+     "grand prix promos"=>"Grand Prix",
+     "judge promos"=>"Judge Gift Program",
+     "launch party cards"=>"Launch Parties",
+     "media promos"=>"Media Inserts",
+     "guru lands"=>"Guru",
+     "european lands"=>"Eurpoean Land Program",
+     "jss/mss promos"=>"Super Series",
+     "magic modern event deck"=>"Modern Event Deck 2014",
+     "prerelease cards"=>"Prerelease Events",
+     "pro tour promos"=>"Pro Tour",
+     "ravnica"=>"Ravnica: City of Guilds",
+     "release event cards"=>"Release Events",
+     "wpn promos"=>"World Magic Cup Qualifiers",
+     "urzas destiny"=>"Urza's Destiny",
+     "urzas legacy"=>"Urza's Legacy",
+     "urzas saga"=>"Urza's Saga"
+   }
 
   def make_singles_csv(action)
     CSV.open("listings_#{Time.now.to_i}.csv", "wb") do |csv|
@@ -226,19 +231,16 @@ class Ebaygent
     response.results
     #price
     response.results.first["sellingStatus"]["currentPrice"]["__value__"].to_f
-    binding.pry
   end
 
   def by_category(num)
     finder = Rebay::Finding.new
     response = finder.find_items_by_category({categoryId: 158756, :SortOrderType => "EndTimeSoonest"})
-    binding.pry
   end
 
   def current_listings_by_cat(string)
     finder = Rebay::Finding.new
     response = finder.find_items_advanced({keywords: string, categoryId: 19107})
-    binding.pry
     response.response['@count']
   end
 
@@ -365,66 +367,103 @@ class Ebaygent
     MTG_JSON_SETS.include?(set) ? set : MTGSTOCKS_TO_MTGJSON["#{set}"]
   end
 
-  def get_api_set(set)
-    MTG_JSON_SETS.include?(set) ? set : TCGPLAYER_TO_MTGJSON["#{set}"]
-  end
-
   def tcg_price_update(range)
+    start = Time.now
     pks = ["MTGSTCKS", "MAGCINFO"]
     base_url = "http://partner.tcgplayer.com/x3/mchl.ashx?pk=#{pks[1]}&sid="
-    sids_found = []
-    not_sids = []
-    updated_cards = []
+    misses = []
+    hits = {}
     problems = {}
-    call_range = range
-    loop_food = call_range - NOT_SIDS
-    loop_food.each do |num|
+    range.each do |num|
       begin
         res = HTTParty.get(base_url + "#{num.to_s}")
         if res.include?("magic")
-          sids_found << num
-          info = res.scan(/store.tcgplayer.com.*?\?/).first.split("\/")
-          set = get_api_set(info[-2].tr("-", " ").titlecase)
-          card = info[-1].tr("-", " ").chomp("?").titlecase
-          db_card = Card.where(name: card, set: set)
-          price = res.scan(/\$\d*.\d*/)[1]
-          if price == nil
-            price = 0
-          else
-            price = price.delete("$").to_f
-          end
-          if db_card == []
-            binding.pry
-          else
-            db_card.update_all(sid: num, value: price)
-            updated_cards << db_card
-          end
+          hits[num] = res
         else
-          not_sids << num
-          @not_sids |= [num]
+          misses |= [num]
         end
-        call_range.delete(num)
-      rescue e
+        sleep(rand(0.1..0.2))
+      rescue Exception => e
         problems[num] = e
-        next
       end
     end
 
-    File.open('./public/WorkingSids.rb', 'w') do |f|
-      f.write(JSON.dump(sids_found))
+    File.open("resultsOn#{range[0]}-#{range[-1]}.rb", "w") do |f|
+      f.write(JSON.dump(hits))
     end
 
-    File.open('./public/UpdatedCards.rb', 'w') do |f|
-      f.write(JSON.dump(updated_cards.map{|c| [c.name, c.set]}))
-    end
+    the_end = Time.now
+    puts "It took " + (the_end - start).to_s + " seconds to process " + range.count.to_s + " numbers."
+    return [misses, problems]
+  end
 
-    File.open('./public/NotSids.rb', 'w') do |f|
-      f.write(JSON.dump(not_sids))
+  def parse_tcg_results(file)
+    misses = []
+    successes = 0
+    File.open(file) do |f|
+      items = JSON.load(f)
+      items.each do |k, v|
+        sid = k
+        price = get_price(v)
+        info = v.scan(/store.tcgplayer.com.*?\?/).first.split("\/")
+        set = get_api_set(get_set_name(info))
+        card = get_card_name(info)
+        db_card = find_card(set, card)
+        if db_card != []
+          db_card.update_all(value: price, sid: sid)
+          successes += 1
+        else
+          misses << sid
+        end
+      end
     end
+    puts successes.to_s + " database updates were made"
+    misses
+  end
 
-    puts not_sids.count.to_s + "Empty Response"
-    puts sids_found.count.to_s + "Full Response"
-    puts updated_cards.count.to_s + "Updated Cards"
+  def make_api_names
+    Card.all.each do |c|
+      c.update_column(:api_name, c.name.downcase.gsub("-", " ").gsub(/[^a-z0-9\s\"]/i, ''))
+    end
+  end
+
+  def find_card(set, card)
+    Card.where(api_name: card).where('lower(set) = ?', get_api_set(set))
+  end
+
+  def get_price(chunk)
+    price = chunk.scan(/\$\d*.\d*/)[1] || "0"
+    price.delete("$").to_f
+  end
+
+  def get_set_name(info)
+    get_api_set(info[-2].tr("-", " ").downcase)
+  end
+
+  def get_api_set(set)
+    downcase = MTG_JSON_SETS.map(&:downcase)
+    begin
+      downcase.include?(set) ? set : TCGPLAYER_TO_MTGJSON["#{set}"].downcase
+    rescue
+      "dummy"
+    end
+  end
+
+  def get_card_name(info)
+    info[-1].tr("-", " ").chomp("?").downcase
+  end
+
+  # look at this  http://www.mtgstocks.com/cards/22129
+
+  def get_tcg_price_update
+    Card.where.not(sid: nil).each do |c|
+      url = "http://partner.tcgplayer.com/x3/mchl.ashx?pk=MAGCINFO&sid=#{c.sid}"
+      info = HTTParty.get(url)
+      new_price = get_price(info)
+      old_price = c.value
+      #add a timestamp for when the value was touched
+      c.update_attribute(:value, new_price)
+    end
   end
 
 
@@ -448,4 +487,32 @@ class Ebaygent
     end
   end
 
+  def json_to_hash(filename)
+    data = {}
+    File.open(filename) do |f|
+      data = JSON.parse(f.read)
+    end
+    data
+  end
+
+  def make_setts
+    data = json_to_hash("data/AllSets.json")
+    sett_params = {}
+    data.each do |sett|
+      sett = sett.second
+      sett_params["name"] = sett["name"]
+      sett_params["code"] = sett["code"]
+      sett_params["gatherer_code"] = sett["gathererCode"]
+      sett_params["magic_cards_info_code"] = sett["magicCardsInfoCode"]
+      sett_params["release_date"] = sett["releaseDate"]
+      sett_params["border"] = sett["border"]
+      sett_params["type"] = sett["type"]
+      sett_params["mkm_name"] = sett["mkm_name"]
+      sett_params["mkm_id"] = sett["mkm_id"]
+      sett_params["mkm_name"] = sett["mkm_name"]
+      sett_params["number_of_cards"] = sett["cards"].count
+      sett_params["plaintext_name"] = ActiveSupport::Inflector.transliterate(sett["name"].downcase.gsub(/[^a-z0-9\s\"]/i, ''))
+      Sett.create(sett_params)
+    end
+  end
 end

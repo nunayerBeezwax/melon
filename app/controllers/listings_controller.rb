@@ -1,6 +1,5 @@
 class ListingsController < ApplicationController
 
-
   # TODO: make validations for listing_params - right now it doesn't break on save if mistake happens
 
   def index
