@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   post 'price_listings' => 'listings#pricer'
   resources :listings
   resources :cards
-  resources :sets
+  resources :dards
+  resources :setts
   root to: "home#index"
 end

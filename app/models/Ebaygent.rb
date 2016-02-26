@@ -38,10 +38,10 @@ class Ebaygent
   ]
 
   MTGSTOCKS_SET_EXCEPTIONS = {
-    "Alpha" => "Alpha Edition",
+    "Limited Edition Alpha" => "Alpha Edition",
     "Battle Royale" => "Battle Royale Box Set",
     "Beatdown" => "Beatdown Box Set",
-    "Beta" => "Beta Edition",
+    "Limited Edition Beta" => "Beta Edition",
     "6th Edition" => "Classic Sixth Edition",
     "5th Edition" => "Fifth Edition",
     "4th Edition" => "Fourth Edition",
@@ -180,6 +180,7 @@ class Ebaygent
     driver.close
     prices = { low: low, average: average, high: high, foil: foil }
     return OpenStruct.new prices
+    redirect_to listings_url
   end
 
   def price_card_from_db(card)
@@ -456,43 +457,50 @@ class Ebaygent
   # look at this  http://www.mtgstocks.com/cards/22129
 
   def get_tcg_price_update
-    Card.where.not(sid: nil).each do |c|
+    Dard.where.not(sid: nil).each do |c|
       url = "http://partner.tcgplayer.com/x3/mchl.ashx?pk=MAGCINFO&sid=#{c.sid}"
       info = HTTParty.get(url)
       new_price = get_price(info)
       old_price = c.value
       #add a timestamp for when the value was touched
-      c.update_attribute(:value, new_price)
+      c.update_attributes(value: new_price, value_updated_at: Time.now)
     end
   end
 
 
-  ## Should not need often or ever again...
+  ## Setup -> Maybe move to Seeds?
   def make_card_db
-    data = {}
+    data = json_to_hash("data/AllSets.json")
     card_params = {}
-    File.open("AllSets.json") do |f|
-      data = JSON.parse(f.read)
-    end
     data.each do |set|
-      current_set = set.second["name"]
+      sett = Sett.find_by_name(set.second["name"])
       set.second["cards"].each do |card|
-        card_params["set"] = current_set
-        card_params["name"] = card["name"]
+        card_params["artist"] = card["artist"]
         card_params["mtg_json_id"] = card["id"]
+        card_params["cmc"] = card["cmc"]
+        card_params["color_identity"] = card["colorIdentity"]
+        card_params["colors"] = card["colors"]
+        card_params["flavor"] = card["flavor"]
+        card_params["image_name"] = card["imageName"]
+        card_params["layout"] = card["layout"]
+        card_params["mana_cost"] = card["manaCost"]
+        card_params["names"] = card["names"]
+        card_params["number"] = card["mciNumber"]
+        card_params["multiverse_id"] = card["multiverseId"]
+        card_params["name"] = card["name"]
+        card_params["power"] = card["power"]
         card_params["rarity"] = card["rarity"]
-        card_params["set_number"] = card["mciNumber"]
-        Card.create(card_params)
+        card_params["subtypes"] = card["subtypes"]
+        card_params["text"] = card["text"]
+        card_params["toughness"] = card["toughness"]
+        card_params["type"] = card["type"]
+        card_params["types"] = card["types"]
+        card_params["plaintext_name"] = ActiveSupport::Inflector.transliterate(card["name"].downcase.gsub(/[^a-z0-9\s\"]/i, ''))
+        card = Dard.create(card_params)
+        sett.dards << card
+        card.update_attribute(:image, card.make_pic_url)
       end
     end
-  end
-
-  def json_to_hash(filename)
-    data = {}
-    File.open(filename) do |f|
-      data = JSON.parse(f.read)
-    end
-    data
   end
 
   def make_setts
@@ -514,5 +522,15 @@ class Ebaygent
       sett_params["plaintext_name"] = ActiveSupport::Inflector.transliterate(sett["name"].downcase.gsub(/[^a-z0-9\s\"]/i, ''))
       Sett.create(sett_params)
     end
+  end
+
+  ## convenience methods
+
+  def json_to_hash(filename)
+    data = {}
+    File.open(filename) do |f|
+      data = JSON.parse(f.read)
+    end
+    data
   end
 end

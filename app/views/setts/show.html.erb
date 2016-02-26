@@ -1,0 +1,5 @@
+<div class="sett">
+  <% @sett.dards.each do |dard| %>
+    <p><%= link_to dard.name, dard_path(dard) %></p>
+  <% end %>
+</div>

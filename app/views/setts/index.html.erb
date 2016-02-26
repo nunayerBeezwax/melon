@@ -1,0 +1,5 @@
+<div class="setts">
+  <% @setts.sort_by{ |s| s.release_date }.each do |sett| %>
+    <p><%= link_to sett.name, sett_path(sett) %></p>
+  <% end %>
+</div>

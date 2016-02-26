@@ -22,7 +22,7 @@ class ListingsController < ApplicationController
 
   def create
     @listing = Listing.create(listing_params)
-    redirect_to :root
+    redirect_to listings_url
   end
 
   def pricer
