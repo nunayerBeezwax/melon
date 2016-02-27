@@ -286,7 +286,7 @@ class Ebaygent
   def ebay_grab
     responses = []
     items = []
-    (1..10).each do |num|
+    [1].each do |num|
       page = HTTParty.get(self.make_ebay_url(num))
       responses << page
     end
@@ -315,12 +315,81 @@ class Ebaygent
       item_hash["end_time"] = item["listingInfo"]["endTime"]
       clean_items << item_hash
     end
+    ditch_crap(clean_items)
+  end
+
+  # must avoid proxies and altered art, etc.
+  def ditch_crap(clean_items)
+    clean_items.delete_if do |item|
+      if !!(item["title"].match(/proxy/i)) || !!(item["title"].match(/altered/i))
+        true
+      end
+    end
     clean_items
   end
 
+  # Here is how you get 1000 ending soonest ebay auctions from individual cards category
   def hit_ebay
     self.gimmie_the_goods(self.ebay_grab)
   end
+
+  def snipes
+    snipes = []
+    self.hit_ebay.each do |item|
+      begin
+        sets = self.infer_set(item)
+        if sets.count == 1
+          maybe_cards = sets.first.dards.where(name: self.infer_card(item).first.name)
+          if maybe_cards.count == 1
+            card = maybe_cards.first
+          end
+        end
+        if card && card.value
+          if card.value > item["price"].to_f
+            snipes << item
+          end
+        end
+      rescue
+        next
+      end
+    end
+    snipes
+  end
+
+  # so first thing we're going to do is get the set.  then we do this:
+  # set.dards.where(name: (a.infer_card(items[x]).first.name)
+  # that should give us a card.  Then we can look at card.value * infer_quantity(item[x]) compared to item[x].price
+
+  def infer_set(clean_item)
+    hits = []
+    Sett.all.each do |set|
+      if !!(clean_item["title"].match(/#{set.name}/i))
+        hits << set
+      end
+    end
+    hits
+  end
+
+  # Wonder how well it will go to guess "the longer one" when it catches sub-substrings...?
+  def infer_card(clean_item)
+    hits = []
+    Card.all.each do |card|
+      if !!(clean_item["title"].match(/#{card.name}/i))
+        hits << card
+      end
+    end
+    hits
+  end
+
+  def infer_quantity(clean_item)
+
+  end
+
+
+
+
+
+
 
   def check_price(clean_items)
     snipes = []
