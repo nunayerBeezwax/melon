@@ -272,14 +272,28 @@ class Ebaygent
   # magic individual cards top level = 38292
   # bidding will be done through the TradingAPI
 
-  def make_ebay_url(searchtype, category)
+  def make_ebay_url(page)
     url = ""
     url += "http://svcs.ebay.com/services/search/FindingService/v1?"
     url += "OPERATION-NAME=findItemsByCategory"
     url += "&SERVICE-VERSION=1.0.0&SECURITY-APPNAME=HarlandH-af4d-46b8-929d-c6b0a5cacfc2"
     url += "&categoryId=38292"
+    url += "&paginationInput.pageNumber=#{page}"
     url += "&sortOrder=EndTimeSoonest" #StartTimeNewest
     url += "&itemFilter(0).name=ListingType&itemFilter(0).value(0)=Auction"
+  end
+
+  def ebay_grab
+    responses = []
+    items = []
+    (1..10).each do |num|
+      page = HTTParty.get(self.make_ebay_url(num))
+      responses << page
+    end
+    responses.each do |res|
+      items << self.pull_items(res)
+    end
+    items.flatten.uniq
   end
 
   def pull_items(response)
@@ -302,6 +316,10 @@ class Ebaygent
       clean_items << item_hash
     end
     clean_items
+  end
+
+  def hit_ebay
+    self.gimmie_the_goods(self.ebay_grab)
   end
 
   def check_price(clean_items)
@@ -459,10 +477,13 @@ class Ebaygent
   def get_tcg_price_update
     Dard.where.not(sid: nil).each do |c|
       url = "http://partner.tcgplayer.com/x3/mchl.ashx?pk=MAGCINFO&sid=#{c.sid}"
-      info = HTTParty.get(url)
+      begin
+        info = HTTParty.get(url)
+      rescue
+        next
+      end
       new_price = get_price(info)
       old_price = c.value
-      #add a timestamp for when the value was touched
       c.update_attributes(value: new_price, value_updated_at: Time.now)
     end
   end
