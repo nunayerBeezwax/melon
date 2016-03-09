@@ -1,0 +1,68 @@
+@font-face {
+	font-family: 'mtg';
+	src: font-url('magic.ttf') format('truetype');
+	font-weight:normal;
+	font-style:normal;
+}
+
+body {
+	font-family: "mtg";
+}
+
+#home {
+	font-size: 1.5em;
+}
+.queue {
+	padding: 2em;
+	background: white;
+	margin: 2em;
+}
+
+.make-buttons {
+	padding: 2em 0 0 2em;
+}
+
+.current-totals {
+	padding-left: 2em;
+	border-top: 3px solid black;
+}
+
+.new-item-form {
+	padding: 2em;
+	margin: 2em;
+	border: 2px solid black;
+	background: #858585;
+	width: 40%;
+}
+
+.new-item-form label {
+  width: 4em;
+  float: left;
+  text-align: right;
+  margin-right: 0.5em;
+  display: block;
+}
+
+.new-item-form input {
+	margin-left: 0.5em;
+	width: 70%;
+}
+
+.new-item-form form {
+	padding: 1em;
+}
+
+input[type=submit] {
+    width: 5em;  height: 4em;
+    font-size: 3em;
+}
+
+button {
+	margin: 3em;
+}
+
+.spacer {
+	padding: 5px;
+}
+
+

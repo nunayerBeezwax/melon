@@ -1,7 +1,8 @@
 <div class="new-item-form">
   <%= form_for @listing do |f| %>
-    <%= f.label :card %>:
-    <%= f.text_field :card %><br><div class="spacer"></div>
+
+    <%= f.label :title %>:
+    <%= f.text_field :title, autofocus: true %><br><div class="spacer"></div>
 
     <%= f.label :series %>:
     <%= f.text_field :series %><br><div class="spacer"></div>
@@ -12,13 +13,10 @@
     <%= f.label :quantity %>:
     <%= f.number_field :quantity %><br><div class="spacer"></div>
 
-    <%= f.label :color %>:
-    <%= f.text_field :color %><br><div class="spacer"></div>
-
     <%= f.label :condition %>:
     <%= f.text_field :condition %><br><div class="spacer"></div>
 
-    <% if @listing.type == "lot" %>
+    <% if @listing.listing_type == "lot" %>
       <%= f.label :notes %>:
       <%= f.text_field :notes %><br><div class="spacer"></div>
 

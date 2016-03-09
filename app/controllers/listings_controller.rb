@@ -10,9 +10,13 @@ class ListingsController < ApplicationController
 
   def new
     @listing = Listing.new
-    if params[:lot] == "true"
-      @listing.type = "lot"
-    end
+  end
+
+  def create
+    card = Card.where(name: listing_params['title'], setname: listing_params['series']).first
+    @listing = Listing.create(listing_params)
+    @listing.cards << card
+    redirect_to listings_url
   end
 
   def show
@@ -20,21 +24,28 @@ class ListingsController < ApplicationController
     render :layout => false
   end
 
-  def create
-    @listing = Listing.create(listing_params)
-    redirect_to listings_url
-  end
-
   def pricer
     a = Ebaygent.new
     a.batch_price(Listing.where(price: nil))
-    redirect_to :root
+    redirect_to listings_path
+  end
+
+  def valuer
+    a = Ebaygent.new
+    a.batch_value(Listing.where(price: nil))
+    redirect_to listings_path
+  end
+
+  def csv
+    a = Ebaygent.new
+    a.make_singles_csv("Add")
+    redirect_to listings_path
   end
 
   private
 
   def listing_params
-    params.require(:listing).permit(:card, :series, :number, :quantity, :price, :pic_url, :color, :condition, :foil)
+    params.require(:listing).permit(:listing_type, :title, :series, :number, :quantity, :price, :condition, :foil)
   end
 
 end

@@ -20,6 +20,7 @@ gem 'mechanize'
 gem 'json'
 gem 'squeel'
 
+
 group :development do
   gem 'web-console', '~> 2.0'
 end

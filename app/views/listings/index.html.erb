@@ -4,8 +4,8 @@
 
 
   <div class="make-buttons">
-    <%= link_to "Make a new Singles Listing", new_listing_path, {class: "create-button"} %><br>
-    <%= link_to "Make a new Lot Listing", { controller: "listings", action: "new", lot: true }, {class: "create-button"} %>
+    <%= link_to "Make a new Singles Listing", new_listing_path %><br>
+    <%= link_to "Make a new Lot Listing", { controller: "listings", action: "new", lot: true } %>
   </div>
 
   <div class="queue">
@@ -20,4 +20,6 @@
   </div>
 
   <button><%= button_to "Price 'em", price_listings_path %></button>
+  <button><%= button_to "Value 'em", value_listings_path %></button>
+  <button><%= button_to "List 'em", csv_listings_path %></button>
 </div>

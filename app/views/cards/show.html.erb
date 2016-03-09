@@ -1,0 +1,14 @@
+<div class="wrapper">
+
+  <div class="card-header">
+    <h1 class="name"><%=  @dard.name %></h1>
+    <%=  @dard.rarity %>
+    <%=  @dard.sett.name %>
+    <%=  @dard.value || "No Value Yet" %>
+  </div>
+
+  <div class="card-image">
+    <%= image_tag @dard.image %>
+  </div>
+
+</div>

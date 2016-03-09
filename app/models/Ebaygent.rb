@@ -3,159 +3,17 @@ class Ebaygent
   require "open-uri"
   require "capybara"
 
-  SINGLES_SMARTHEADERS = [
-    "ConditionID=3000",
-    "Format=FixedPrice",
-    "Duration=30",
-    "Location=56686",
-    "ShippingType=Flat",
-    "ShipToLocations=Worldwide",
-    "ShippingService-1:Option=USPSFirstClass",
-    "ShippingService-1:Cost=0",
-    "ShippingService-1:FreeShipping=1",
-    "ShippingService-1:AdditionalCost=0",
-    "IntlShippingService-1:Option=USPSFirstClassMailInternational",
-    "IntlShippingService-1:Cost=2",
-    "IntlShippingService-1:AdditionalCost=0",
-    "IntlShippingService-1:Locations=Worldwide",
-    "DispatchTimeMax=1",
-    "PayPalAccepted=1",
-    "PayPalEmailAddress=awkwardmelon@gmail.com",
-    "RefundOption=MoneyBackOrReplacement",
-    "ReturnsAcceptedOption=ReturnsAccepted",
-    "ReturnsWithinOption=Days_14",
-    "ShippingCostPaidByOption=Buyer"
-  ]
-
-  SINGLES_HEADERS = [
-    "Action",
-    "Category",
-    "PicURL",
-    "Title",
-    "Description",
-    "Quantity",
-    "StartPrice"
-  ]
-
-  MTGSTOCKS_SET_EXCEPTIONS = {
-    "Limited Edition Alpha" => "Alpha Edition",
-    "Battle Royale" => "Battle Royale Box Set",
-    "Beatdown" => "Beatdown Box Set",
-    "Limited Edition Beta" => "Beta Edition",
-    "6th Edition" => "Classic Sixth Edition",
-    "5th Edition" => "Fifth Edition",
-    "4th Edition" => "Fourth Edition",
-    "Magic Core Set 2010" => "Magic 2010 (M10)",
-    "Magic Core Set 2011" => "Magic 2011 (M11)",
-    "Magic Core Set 2012" => "Magic 2012 (M12)",
-    "Magic Core Set 2013" => "Magic 2013 (M13)",
-    "Magic Core Set 2014" => "Magic 2014 (M14)",
-    "Magic Core Set 2015" => "Magic 2015 (M15)",
-    "Revised" => "Revised Edition",
-    "Unlimited" => "Unlimited Edition"
-  }
-
-  # can't deal with [Duel Decks: Blessed vs. Cursed, Miscellaneous Promos, Special Occasion]
-  MTGSTOCKS_TO_MTGJSON = {
-    "10th Edition" => "Tenth Edition",
-    "7th Edition" => "Seventh Edition",
-    "8th Edition" => "Eighth Edition",
-    "9th Edition" => "Ninth Edition",
-    "Alpha Edition" => "Limited Edition Alpha",
-    "Beta Edition" => "Limited Edition Beta",
-    "Champs Promos" => "Champs and States",
-    "Conspiracy" => "Magic: the Gathering-Conspiracy",
-    "FNM Promos" => "Friday Night Magic",
-    "Game Day Promos" => "Magic Game Day",
-    "Gateway Promos" => "Gateway",
-    "Grand Prix Promos" => "Grand Prix",
-    "Judge Promos" => "Judge Gift Program",
-    "Launch Party Cards" => "Launch Parties",
-    "Magic 2010 (M10)" => "Magic 2010",
-    "Magic 2011 (M11)" => "Magic 2011",
-    "Magic 2012 (M12)" => "Magic 2012",
-    "Magic 2013 (M13)" => "Magic 2013",
-    "Magic 2014 (M14)" => "Magic 2014",
-    "Magic 2015 (M15)" => "Magic 2015",
-    "Media Promos" => "Media Inserts",
-    "Modern Event Deck" => "Modern Event Deck 2014",
-    "Prerelease Cards" => "Prerelease Events",
-    "Pro Tour Promos" => "Pro Tour",
-    "Ravnica" => "Ravnica: City of Guilds",
-    "Release Event Cards" => "Release Events",
-    "WPN Promos" => "World Magic Cup Qualifiers",
-    "Zendikar Expedition" => "Zendikar Expeditions"
-  }
-
-  # can't deal with [Duel Decks: Blessed vs. Cursed, Miscellaneous Promos, Special Occasion]
-  TCGPLAYER_TO_MTGJSON = {"magic 2010 (m10)"=>"Magic 2010",
-     "magic 2011 m11"=>"Magic 2011",
-     "magic 2012 m12"=>"Magic 2012",
-     "magic 2013 m13"=>"Magic 2013",
-     "magic 2014 m14"=>"Magic 2014",
-     "magic 2015 m15"=>"Magic 2015",
-     "sixth edition"=>"Classic Sixth Edition",
-     "7th edition"=>"Seventh Edition",
-     "8th edition"=>"Eighth Edition",
-     "9th edition"=>"Ninth Edition",
-     "10th edition"=>"Tenth Edition",
-     "alpha edition"=>"Limited Edition Alpha",
-     "beta edition"=>"Limited Edition Beta",
-     "anthology"=>"Duel Decks: Anthology",
-     "duel decks zendikar vs eldrazi"=>"Duel Decks: Zendikar vs. Eldrazi",
-     "duel decks elspeth vs kiora"=>"Duel Decks: Elspeth vs. Kiora",
-     "duel decks speed vs cunning"=>"Duel Decks: Speed vs. Cunning",
-     "duel decks ajani vs nicol bolas"=>"Duel Decks: Ajani vs. Nicol Bolas",
-     "duel decks divine vs demonic"=>"Duel Decks: Divine vs. Demonic",
-     "duel decks elspeth vs tezzeret"=>"Duel Decks: Elspeth vs. Tezzeret",
-     "duel decks elves vs goblins"=>"Duel Decks: Elves vs. Goblins",
-     "duel decks garruk vs liliana"=>"Duel Decks: Garruk vs. Liliana",
-     "duel decks heroes vs monsters"=>"Duel Decks: Heroes vs. Monsters",
-     "duel decks izzet vs golgari"=>"Duel Decks: Izzet vs. Golgari",
-     "duel decks jace vs chandra"=>"Duel Decks: Jace vs. Chandra",
-     "duel decks jace vs vraska"=>"Duel Decks: Jace vs. Vraska",
-     "duel decks knights vs dragons"=>"Duel Decks: Knights vs. Dragons",
-     "duel decks sorin vs tibalt"=>"Duel Decks: Sorin vs. Tibalt",
-     "duel decks venser vs koth"=>"Duel Decks: Venser vs. Koth",
-     "pds: graveborn"=>"Premium Deck Series: Graveborn",
-     "pds: fire and lightning"=>"Premium Deck Series: Fire and Lightning",
-     "pds: slivers"=>"Premium Deck Series: Slivers",
-     "champs promos"=>"Champs and States",
-     "fnm promos"=>"Friday Night Magic",
-     "game day promos"=>"Magic Game Day",
-     "gateway promos"=>"Gateway",
-     "grand prix promos"=>"Grand Prix",
-     "judge promos"=>"Judge Gift Program",
-     "launch party cards"=>"Launch Parties",
-     "media promos"=>"Media Inserts",
-     "guru lands"=>"Guru",
-     "european lands"=>"Eurpoean Land Program",
-     "jss/mss promos"=>"Super Series",
-     "magic modern event deck"=>"Modern Event Deck 2014",
-     "prerelease cards"=>"Prerelease Events",
-     "pro tour promos"=>"Pro Tour",
-     "ravnica"=>"Ravnica: City of Guilds",
-     "release event cards"=>"Release Events",
-     "wpn promos"=>"World Magic Cup Qualifiers",
-     "urzas destiny"=>"Urza's Destiny",
-     "urzas legacy"=>"Urza's Legacy",
-     "urzas saga"=>"Urza's Saga"
-   }
-
   def make_singles_csv(action)
     CSV.open("listings_#{Time.now.to_i}.csv", "wb") do |csv|
       csv << [SINGLES_HEADERS, SINGLES_SMARTHEADERS].flatten
       Listing.where(listed?: false).each do |l|
-        array = [action, l.make_category, l.make_pic_url, l.make_title, l.make_description, l.quantity, l.price]
+        array = [action, l.make_category, l.cards.first.image, l.make_title, l.make_description, l.quantity, l.price]
         csv << array
         # technically false, it has only been put in the csv, not put on ebay... should fix?
         l.update_column(:listed?, true) if action == "Add"
       end
     end
   end
-
-  # have to deal with FOILS...
-  # have to perfectly map my series names to theirs (i.e. 4th Edition -> Fourth Edition)
 
   def get_prices(listing)
     driver = Selenium::WebDriver.for(:firefox)
@@ -167,11 +25,17 @@ class Ebaygent
     set_link.click
     nav = driver.find_element(:class, "navbar")
     driver.execute_script("arguments[0].style.display='none'", nav)
-    card_link = driver.find_element(:link_text, listing.card)
+    card_link = driver.find_element(:link_text, listing.cards.first.name)
     card_link.click
-    low = driver.find_element(:class, "low").text.gsub("$", "").to_f
-    average = driver.find_element(:class, "average").text.gsub("$", "").to_f
-    high = driver.find_element(:class, "high").text.gsub("$", "").to_f
+    begin
+      low = driver.find_element(:class, "low").text.gsub("$", "").to_f
+      average = driver.find_element(:class, "average").text.gsub("$", "").to_f
+      high = driver.find_element(:class, "high").text.gsub("$", "").to_f
+    rescue
+      low = "No Low"
+      average = "No Average"
+      high = "No High"
+    end
     begin
       foil = driver.find_element(:class, "foilprice").text.gsub("$", "").to_f
     rescue Selenium::WebDriver::Error::NoSuchElementError
@@ -224,6 +88,23 @@ class Ebaygent
     end
   end
 
+  def batch_value(listings)
+    listings.each do |l|
+      card = l.cards.first
+      if l.foil
+        temp = price_listing(l) * l.number
+      elsif card.value
+        temp = card.value * l.number
+      else
+        temp = price_listing(l) * l.number
+      end
+      temp = temp.ceil.to_f - 0.01
+      temp = temp - 1 if l.condition == "EX"
+      temp = temp - 2 if !["NM", "EX"].include?(l.condition)
+      price = temp > 2.99 ? temp : 2.99
+      l.update_attribute(:price, price)
+    end
+  end
 
   def current_listings(string)
     finder = Rebay::Finding.new
@@ -264,7 +145,6 @@ class Ebaygent
   def mode(a)
     a.group_by(&:itself).values.max_by(&:size).first if a.count >= 1
   end
-
 
 
   #ebay API Stuff
@@ -337,15 +217,16 @@ class Ebaygent
     snipes = []
     self.hit_ebay.each do |item|
       begin
-        sets = self.infer_set(item)
+        sets = self.infer_set(item["title"])
         if sets.count == 1
-          maybe_cards = sets.first.dards.where(name: self.infer_card(item).first.name)
+          maybe_cards = sets.first.cards.where(name: self.infer_card(item["title"]).first.name)
           if maybe_cards.count == 1
             card = maybe_cards.first
           end
         end
+        quantity = infer_quantity(item["title"]).to_i
         if card && card.value
-          if card.value > item["price"].to_f
+          if (card.value * quantity) > ((item["price"].to_f + item["shipping_cost"].to_f) * quantity)
             snipes << item
           end
         end
@@ -357,32 +238,51 @@ class Ebaygent
   end
 
   # so first thing we're going to do is get the set.  then we do this:
-  # set.dards.where(name: (a.infer_card(items[x]).first.name)
+  # set.cards.where(name: (a.infer_card(items[x]).first.name)
   # that should give us a card.  Then we can look at card.value * infer_quantity(item[x]) compared to item[x].price
 
-  def infer_set(clean_item)
+  def card_from_line(line)
+    infer_set(line)
+    infer_card(line)
+    infer_foil(line)
+  end
+
+  def infer_set(string)
     hits = []
     Sett.all.each do |set|
-      if !!(clean_item["title"].match(/#{set.name}/i))
+      if !!(string.match(/#{set.name}/i))
         hits << set
       end
     end
-    hits
+    if hits.count > 1
+      hits.sort { |x,y| x.name.length <=> y.name.length }.last
+    else
+      hits
+    end
   end
 
-  # Wonder how well it will go to guess "the longer one" when it catches sub-substrings...?
-  def infer_card(clean_item)
+  def infer_card(string)
     hits = []
     Card.all.each do |card|
-      if !!(clean_item["title"].match(/#{card.name}/i))
+      next if card.name == "Foil"
+      if !!(string.match(/#{card.name}/i))
         hits << card
       end
     end
-    hits
+    if hits.count > 1
+      hits.sort { |x,y| x.name.length <=> y.name.length }.last
+    else
+      hits
+    end
   end
 
-  def infer_quantity(clean_item)
+  def infer_quantity(string)
+    nums = string.scan(/\d/)
+    nums.max || "1"
+  end
 
+  def infer_foil(string)
+    !!string.match(/foil/i)
   end
 
 
@@ -416,12 +316,11 @@ class Ebaygent
 
 ## mtgstocks seems to go from = "http://mtgstocks.com/cards/1-30497"
 
-  def stock_scraper
-    range = [*20000..20010]
+  def stock_scraper(range)
     bad_pages = {}
-    successful_entries = 0
+    hits = {}
     mech = Mechanize.new
-    mech.user_agent = "Melon MTG Pricescraper v0.1 - awkwardmelon@gmail.com - Please contact if the behavior of this bot is found to be problematic in any way."
+    mech.user_agent = "Melon MTG Scraper v0.1 - awkwardmelon@gmail.com - Please contact if the behavior of this bot is found to be problematic in any way."
     range.shuffle.each do |n|
       begin
         page = mech.get("http://mtgstocks.com/cards/#{n}")
@@ -433,29 +332,38 @@ class Ebaygent
         id = page.uri.path.scan(/\d+/).first.to_i
         card = page.at("title").text.chomp(" - MTGStocks.com")
         set = page.at(".indent").at("a").text
-        price = page.at(".average").text.delete("$").to_f
-        # what if it doesn't have .foilprice?
-        foilprice = page.at(".foilprice").text.delete("$").to_f
-        db_card = Card.where(name: card, set: get_scrape_set(set)).first
-        db_card.update_column(:value, price)
-        db_card.update_column(:foil_value, foilprice)
-        if db_card.mtg_stocks_id == nil
-          db_card.update_column(:mtg_stocks_id, id)
-        end
-        successful_entries += 1
+        hits["Card: #{card}" + " " + "Set: #{set}"] = n
       end
+      puts "#{card} - #{set} - #{n}"
       sleep(rand(1.0..2.0))
     end
-    puts bad_pages
-    puts "Successful Entries = " + successful_entries.to_s
-    puts Card.where(mtg_stocks_id: nil).count.to_s + "Unfinished Cards in DB"
+    File.open("mtgStocksNumberScrape.rb", "w") do |f|
+      f.write(JSON.dump(hits))
+    end
+    return hits
   end
 
   def get_scrape_set(set)
     MTG_JSON_SETS.include?(set) ? set : MTGSTOCKS_TO_MTGJSON["#{set}"]
   end
 
-  def tcg_price_update(range)
+  def db_mtgstocks_ids(file)
+    file = File.read("#{file}")
+    data = JSON.parse(file)
+    fails = []
+    data.each do |d|
+      name = d.first[/Card:\s(.*?)Set:/,1].strip
+      set = d.first[/Set:\s(.*)/,1].strip
+      card = Card.where(name: name, setname: get_scrape_set(set)).first
+      if card
+        card.update_attribute(:mtg_stocks_id, d.second)
+      else
+        fails << d
+      end
+    end
+  end
+
+  def tcg_sid_collector(range)
     start = Time.now
     pks = ["MTGSTCKS", "MAGCINFO"]
     base_url = "http://partner.tcgplayer.com/x3/mchl.ashx?pk=#{pks[1]}&sid="
@@ -470,7 +378,6 @@ class Ebaygent
         else
           misses |= [num]
         end
-        sleep(rand(0.1..0.2))
       rescue Exception => e
         problems[num] = e
       end
@@ -492,13 +399,12 @@ class Ebaygent
       items = JSON.load(f)
       items.each do |k, v|
         sid = k
-        price = get_price(v)
         info = v.scan(/store.tcgplayer.com.*?\?/).first.split("\/")
         set = get_api_set(get_set_name(info))
         card = get_card_name(info)
         db_card = find_card(set, card)
         if db_card != []
-          db_card.update_all(value: price, sid: sid)
+          db_card.first.update_attribute(:sid, sid)
           successes += 1
         else
           misses << sid
@@ -516,7 +422,7 @@ class Ebaygent
   end
 
   def find_card(set, card)
-    Card.where(api_name: card).where('lower(set) = ?', get_api_set(set))
+    Card.where(api_name: card).where('lower(setname) = ?', get_api_set(set))
   end
 
   def get_price(chunk)
@@ -541,10 +447,8 @@ class Ebaygent
     info[-1].tr("-", " ").chomp("?").downcase
   end
 
-  # look at this  http://www.mtgstocks.com/cards/22129
-
   def get_tcg_price_update
-    Dard.where.not(sid: nil).each do |c|
+    Card.where.not(sid: nil).each do |c|
       url = "http://partner.tcgplayer.com/x3/mchl.ashx?pk=MAGCINFO&sid=#{c.sid}"
       begin
         info = HTTParty.get(url)
@@ -553,74 +457,88 @@ class Ebaygent
       end
       new_price = get_price(info)
       old_price = c.value
+      old_update_time = c.value_updated_at
       c.update_attributes(value: new_price, value_updated_at: Time.now)
-    end
-  end
-
-
-  ## Setup -> Maybe move to Seeds?
-  def make_card_db
-    data = json_to_hash("data/AllSets.json")
-    card_params = {}
-    data.each do |set|
-      sett = Sett.find_by_name(set.second["name"])
-      set.second["cards"].each do |card|
-        card_params["artist"] = card["artist"]
-        card_params["mtg_json_id"] = card["id"]
-        card_params["cmc"] = card["cmc"]
-        card_params["color_identity"] = card["colorIdentity"]
-        card_params["colors"] = card["colors"]
-        card_params["flavor"] = card["flavor"]
-        card_params["image_name"] = card["imageName"]
-        card_params["layout"] = card["layout"]
-        card_params["mana_cost"] = card["manaCost"]
-        card_params["names"] = card["names"]
-        card_params["number"] = card["mciNumber"]
-        card_params["multiverse_id"] = card["multiverseId"]
-        card_params["name"] = card["name"]
-        card_params["power"] = card["power"]
-        card_params["rarity"] = card["rarity"]
-        card_params["subtypes"] = card["subtypes"]
-        card_params["text"] = card["text"]
-        card_params["toughness"] = card["toughness"]
-        card_params["type"] = card["type"]
-        card_params["types"] = card["types"]
-        card_params["plaintext_name"] = ActiveSupport::Inflector.transliterate(card["name"].downcase.gsub(/[^a-z0-9\s\"]/i, ''))
-        card = Dard.create(card_params)
-        sett.dards << card
-        card.update_attribute(:image, card.make_pic_url)
+      if c.historical_values
+        c.update(:historical_values => c.historical_values.merge({ old_update_time.to_s => old_price }))
+      else
+        c.update_attribute(:historical_values, {old_update_time.to_s => old_price})
       end
     end
   end
 
-  def make_setts
-    data = json_to_hash("data/AllSets.json")
-    sett_params = {}
-    data.each do |sett|
-      sett = sett.second
-      sett_params["name"] = sett["name"]
-      sett_params["code"] = sett["code"]
-      sett_params["gatherer_code"] = sett["gathererCode"]
-      sett_params["magic_cards_info_code"] = sett["magicCardsInfoCode"]
-      sett_params["release_date"] = sett["releaseDate"]
-      sett_params["border"] = sett["border"]
-      sett_params["type"] = sett["type"]
-      sett_params["mkm_name"] = sett["mkm_name"]
-      sett_params["mkm_id"] = sett["mkm_id"]
-      sett_params["mkm_name"] = sett["mkm_name"]
-      sett_params["number_of_cards"] = sett["cards"].count
-      sett_params["plaintext_name"] = ActiveSupport::Inflector.transliterate(sett["name"].downcase.gsub(/[^a-z0-9\s\"]/i, ''))
-      Sett.create(sett_params)
+
+  ## Cardshark poking w/Selenium
+
+  def get_rares_by_seller(sellername)
+    driver = Selenium::WebDriver.for(:firefox)
+    page = driver.get("http://www.cardshark.com/Sellers/Cards-by-Seller.aspx?Game=Magic&Seller=#{sellername}")
+    Selenium::WebDriver::Support::Select.new(driver.find_element(:id, "ctl00_ContentPlaceHolder1_ddlPageSize")).select_by(:text, "All cards")
+    Selenium::WebDriver::Support::Select.new(driver.find_element(:id, "ctl00_ContentPlaceHolder1_ddlFilterRarity")).select_by(:text, "Rares")
+    driver.find_element(:id, "ctl00_ContentPlaceHolder1_ibFilter").click
+    table = []
+    table << driver.find_elements(:class, "tableViewHeader")
+    table << driver.find_elements(:class, "tableViewRow")
+    headers = table.first.first.text.strip.split(" ")
+    data = fix_cardshark_table_data(table.second)
+    CSV.open("cardshark_seller_#{sellername}_rares.csv", "wb") do |csv|
+      csv << headers
+      data.each do |row|
+        csv << row
+      end
     end
   end
 
-  ## convenience methods
-
-  def json_to_hash(filename)
-    data = {}
-    File.open(filename) do |f|
-      data = JSON.parse(f.read)
+  def fix_cardshark_table_data(data)
+    clean_data = []
+    data.each do |item|
+      final_answer = []
+      arr = item.text.split(" ")
+      card_lookup = ""
+      card = nil
+      until card do
+        card_lookup += arr.shift
+        card = Card.find_by_name(card_lookup)
+        card_lookup += " "
+      end
+      final_answer << card_lookup
+      set_lookup = ""
+      sett = nil
+      until sett do
+        set_lookup += arr.shift
+        sett = Sett.find_by_name(set_lookup)
+        set_lookup += " "
+      end
+      final_answer << set_lookup
+      final_answer << arr.shift
+      final_answer << arr.shift
+      if arr[0] == "Near"
+        nm = ""
+        nm += arr.shift
+        nm += arr.shift
+        final_answer << nm
+      else
+        final_answer << arr.shift
+      end
+      if arr[0] == "Foil"
+        final_answer << arr.shift
+      else
+        final_answer << "Nonfoil"
+      end
+      final_answer << arr.shift
+      if arr[0][0] == "$"
+        final_answer << ""
+      else
+        final_answer << arr.shift
+      end
+      final_answer << arr.shift
+      final_answer << arr.shift
+      clean_data << final_answer
     end
-    data
+    clean_data
   end
+
+  # look at this  http://www.mtgstocks.com/cards/22129
+
 end
+

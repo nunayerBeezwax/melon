@@ -10,20 +10,24 @@ Make Analytics/Newsletter section
 
 
 Tools -
-Have to finish eBay API for pulling in listings
-Have to finalize and then chron out the Card.value system
-Have to make a cut/paste value estimating tool (also API accessible for eBay lots eventually)
-Have to NLP eBay titles to turn them into Cards/Quantities/Conditions and then Values
-Have to set up eBay sniper to put in the bids I identify
-Have to do chron'd eBay current listings price updater
-Have to make push notifications for big lots/search tempest
-Have to set up employee/sign in/permissions/tracking system
-Have to set up historical pricing data hstore on Cards
-Have to set up card price alerts for interesting spikes and trends
-Have to set up Digital Ocean server where the tasks can go on without me
-Have to finish/perfect the :sids so TCG API is fully functional
-Deal with foils, ugh.
-
+finish eBay API for pulling in listings
+Chron the TCGPlayer API value system
+make a cut/paste value estimating tool (also API accessible for eBay lots eventually)
+NLP eBay titles to turn them into Cards/Quantities/Conditions and then Values
+set up eBay sniper to put in the bids I identify
+Chron eBay current listings price updater
+make push notifications for big lots/search tempest
+set up employee/sign in/permissions/tracking system
+* DONE set up historical pricing data hstore on Cards
+set up card price alerts for interesting spikes and trends
+set up Digital Ocean server where the tasks can go on without me
+Deal with foils for pricing and listing details
 
 Maybe move off of File Importer into API lister?
 If so, can operate some callbacks on the Listings to do stuff in my own system
+
+Tasks -
+Fix <card>.get_pic_url & write tests to see which ones don't work
+Finalize the tcgplayer api sid
+Set up HABTM relation between cards/listings and update how new listings are made using card/sett objects
+Deal with errors in the interface instead of console

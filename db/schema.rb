@@ -11,29 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160226054410) do
+ActiveRecord::Schema.define(version: 20160301210057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
 
   create_table "cards", force: :cascade do |t|
-    t.string  "mtg_json_id"
-    t.string  "name"
-    t.string  "set"
-    t.string  "artist"
-    t.string  "color"
-    t.string  "mana_cost"
-    t.string  "rarity"
-    t.float   "value"
-    t.string  "set_number"
-    t.float   "foil_value"
-    t.string  "mtg_stocks_id"
-    t.integer "sid"
-    t.string  "api_name"
-  end
-
-  create_table "dards", force: :cascade do |t|
     t.string   "mtg_json_id"
     t.string   "layout"
     t.string   "name"
@@ -76,20 +60,27 @@ ActiveRecord::Schema.define(version: 20160226054410) do
     t.integer  "sett_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "setname"
+    t.string   "api_name"
   end
 
-  add_index "dards", ["image"], name: "index_dards_on_image", using: :btree
-  add_index "dards", ["mtg_stocks_id"], name: "index_dards_on_mtg_stocks_id", using: :btree
-  add_index "dards", ["name"], name: "index_dards_on_name", using: :btree
-  add_index "dards", ["plaintext_name"], name: "index_dards_on_plaintext_name", using: :btree
-  add_index "dards", ["rarity"], name: "index_dards_on_rarity", using: :btree
-  add_index "dards", ["sett_id"], name: "index_dards_on_sett_id", using: :btree
-  add_index "dards", ["sid"], name: "index_dards_on_sid", using: :btree
-  add_index "dards", ["value"], name: "index_dards_on_value", using: :btree
-  add_index "dards", ["value_updated_at"], name: "index_dards_on_value_updated_at", using: :btree
+  add_index "cards", ["image"], name: "index_cards_on_image", using: :btree
+  add_index "cards", ["mtg_stocks_id"], name: "index_cards_on_mtg_stocks_id", using: :btree
+  add_index "cards", ["name"], name: "index_cards_on_name", using: :btree
+  add_index "cards", ["plaintext_name"], name: "index_cards_on_plaintext_name", using: :btree
+  add_index "cards", ["rarity"], name: "index_cards_on_rarity", using: :btree
+  add_index "cards", ["sett_id"], name: "index_cards_on_sett_id", using: :btree
+  add_index "cards", ["sid"], name: "index_cards_on_sid", using: :btree
+  add_index "cards", ["value"], name: "index_cards_on_value", using: :btree
+  add_index "cards", ["value_updated_at"], name: "index_cards_on_value_updated_at", using: :btree
+
+  create_table "cards_listings", id: false, force: :cascade do |t|
+    t.integer "card_id",    null: false
+    t.integer "listing_id", null: false
+  end
 
   create_table "listings", force: :cascade do |t|
-    t.string  "card"
+    t.string  "title"
     t.string  "series"
     t.integer "number"
     t.integer "quantity"
@@ -97,10 +88,10 @@ ActiveRecord::Schema.define(version: 20160226054410) do
     t.string  "pic_url"
     t.string  "color"
     t.string  "condition"
-    t.boolean "listed?",   default: false
+    t.boolean "listed?",      default: false
     t.text    "notes"
-    t.string  "type"
-    t.boolean "foil",      default: false
+    t.string  "listing_type"
+    t.boolean "foil",         default: false
   end
 
   create_table "setts", force: :cascade do |t|
