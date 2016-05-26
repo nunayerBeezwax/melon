@@ -15,6 +15,18 @@ class Ebaygent
     end
   end
 
+  def make_auction_csv(action)
+    CSV.open("listings_#{Time.now.to_i}.csv", "wb") do |csv|
+      csv << [SINGLES_HEADERS, AUCTION_SMARTHEADERS].flatten
+      Listing.where(listed?: false).each do |l|
+        array = [action, l.make_category, l.cards.first.image, l.make_title, l.make_description, l.quantity, l.price]
+        csv << array
+        # technically false, it has only been put in the csv, not put on ebay... should fix?
+        l.update_column(:listed?, true) if action == "Add"
+      end
+    end
+  end
+
   def get_prices(listing)
     driver = Selenium::WebDriver.for(:firefox)
     driver.get("http://mtgstocks.com/sets")
@@ -540,5 +552,25 @@ class Ebaygent
 
   # look at this  http://www.mtgstocks.com/cards/22129
 
+  def get_cardshark_dump
+    Cardsharkcard.delete_all
+    data = HTTParty.get("http://www.cardshark.com/API/the_awkward_melon/Get-Full-Feed.aspx?apiKey=55B5C472-33BA-4908-91B7-A02A4C67BD24")
+    File.open("cardshark.tsv", "w") do |f|
+      f.write(data)
+    end
+    array = CSV.read("cardshark.tsv", {col_sep: "\t", quote_char: "|"})
+    array[1..-1].each do |row|
+      Cardsharkcard.create({
+        card_id: row[0],
+        name: row[1],
+        set: row[2],
+        seller: row[3],
+        price: row[4],
+        foil_quantity: row[5],
+        quantity: row[6]
+      })
+    end
+    data
+  end
 end
 

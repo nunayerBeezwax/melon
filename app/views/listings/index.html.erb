@@ -5,7 +5,8 @@
 
   <div class="make-buttons">
     <%= link_to "Make a new Singles Listing", new_listing_path %><br>
-    <%= link_to "Make a new Lot Listing", { controller: "listings", action: "new", lot: true } %>
+    <%= link_to "Make a new Lot Listing", { controller: "listings", action: "new", listing_type: "lot" } %></br>
+    <%= link_to "Make a new Auction Listing", { controller: "listings", action: "new", listing_type: "auction" } %>
   </div>
 
   <div class="queue">

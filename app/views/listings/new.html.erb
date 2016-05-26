@@ -24,6 +24,13 @@
       <%= f.text_field :price %><br><div class="spacer"></div>
     <%end%>
 
+    <% if @listing.listing_type == "auction" %>
+      <%= f.label :price %>:
+      <%= f.text_field :price, value: ".99" %><br><div class="spacer"></div>
+      <%= f.label :type %>:
+      <%= f.text_field :listing_type, value: "auction" %><br><div class="spacer"></div>
+    <%end%>
+
     <%= f.label :foil %>:
     <%= f.check_box :foil %><br><div class="spacer"></div>
 

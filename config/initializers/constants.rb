@@ -17,7 +17,6 @@ CATEGORIES = {
 'Land': '19115'
 }
 
-
 SINGLES_SMARTHEADERS = [
   "ConditionID=3000",
   "Format=FixedPrice",
@@ -32,6 +31,29 @@ SINGLES_SMARTHEADERS = [
   "IntlShippingService-1:Option=USPSFirstClassMailInternational",
   "IntlShippingService-1:Cost=2",
   "IntlShippingService-1:AdditionalCost=0",
+  "IntlShippingService-1:Locations=Worldwide",
+  "DispatchTimeMax=1",
+  "PayPalAccepted=1",
+  "PayPalEmailAddress=awkwardmelon@gmail.com",
+  "RefundOption=MoneyBackOrReplacement",
+  "ReturnsAcceptedOption=ReturnsAccepted",
+  "ReturnsWithinOption=Days_14",
+  "ShippingCostPaidByOption=Buyer"
+]
+
+AUCTION_SMARTHEADERS = [
+  "ConditionID=3000",
+  "Format=Auction",
+  "Duration=7",
+  "Location=56686",
+  "ShippingType=Flat",
+  "ShipToLocations=Worldwide",
+  "ShippingService-1:Option=USPSFirstClass",
+  "ShippingService-1:Cost=.99",
+  "ShippingService-1:AdditionalCost=0",
+  "IntlShippingService-1:Option=USPSFirstClassMailInternational",
+  "IntlShippingService-1:Cost=2",
+  "IntlShippingService-1:AdditionalCost=1",
   "IntlShippingService-1:Locations=Worldwide",
   "DispatchTimeMax=1",
   "PayPalAccepted=1",

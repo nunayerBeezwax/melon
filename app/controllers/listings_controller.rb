@@ -10,11 +10,13 @@ class ListingsController < ApplicationController
 
   def new
     @listing = Listing.new
+    @listing.listing_type = params["listing_type"] if params["listing_type"]
   end
 
   def create
     card = Card.where(name: listing_params['title'], setname: listing_params['series']).first
     @listing = Listing.create(listing_params)
+    binding.pry
     @listing.cards << card
     redirect_to listings_url
   end
@@ -38,7 +40,12 @@ class ListingsController < ApplicationController
 
   def csv
     a = Ebaygent.new
-    a.make_singles_csv("Add")
+    # kludge
+    if Listing.where(listed?: false).last.listing_type == "auction"
+      a.make_auction_csv("Add")
+    else
+      a.make_singles_csv("Add")
+    end
     redirect_to listings_path
   end
 

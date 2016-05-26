@@ -31,3 +31,6 @@ Fix <card>.get_pic_url & write tests to see which ones don't work
 Finalize the tcgplayer api sid
 Set up HABTM relation between cards/listings and update how new listings are made using card/sett objects
 Deal with errors in the interface instead of console
+Add easy price change box on Listing#index (or listing#edit)
+Figure out why listing valuer doesn't work if there is a previous listing with same title
+
