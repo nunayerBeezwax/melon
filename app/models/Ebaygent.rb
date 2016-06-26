@@ -15,6 +15,18 @@ class Ebaygent
     end
   end
 
+  def make_lot_csv(action)
+    CSV.open("listings_#{Time.now.to_i}.csv", "wb") do |csv|
+      csv << [SINGLES_HEADERS, LOT_SMARTHEADERS].flatten
+      Listing.where(listed?: false).each do |l|
+        array = [action, '19115', l.pic_url, l.title, l.make_description, l.quantity, l.price]
+        csv << array
+        # technically false, it has only been put in the csv, not put on ebay... should fix?
+        l.update_column(:listed?, true) if action == "Add"
+      end
+    end
+  end
+
   def make_auction_csv(action)
     CSV.open("listings_#{Time.now.to_i}.csv", "wb") do |csv|
       csv << [SINGLES_HEADERS, AUCTION_SMARTHEADERS].flatten
@@ -95,7 +107,7 @@ class Ebaygent
       temp = price_listing(l)
       temp = temp - 1 if l.condition == "EX"
       temp = temp - 2 if !["NM", "EX"].include?(l.condition)
-      price = temp > 2.49 ? temp : 2.49
+      price = temp > 2.99 ? temp : 2.99
       l.update_column(:price, price)
     end
   end
@@ -104,11 +116,11 @@ class Ebaygent
     listings.each do |l|
       card = l.cards.first
       if l.foil
-        temp = price_listing(l) * l.number
+        temp = price_listing(l)
       elsif card.value
         temp = card.value * l.number
       else
-        temp = price_listing(l) * l.number
+        temp = price_listing(l)
       end
       temp = temp.ceil.to_f - 0.01
       temp = temp - 1 if l.condition == "EX"
@@ -572,5 +584,50 @@ class Ebaygent
     end
     data
   end
+
+  #  First make the Sett (by hand so far)!!!
+  #  Card.create by individual set.  Download the MTG.json for that set, put the file in data.  Then call
+  #  Ebaygent.make_cards(file) and send in the filename.  Should do it.
+
+  def make_cards_by_set(file)
+    data = json_to_hash("data/#{file}")
+    card_params = {}
+    sett = Sett.find_by_name(data.first[1])
+    data["cards"].each do |card|
+      card_params["artist"] = card["artist"]
+      card_params["mtg_json_id"] = card["id"]
+      card_params["cmc"] = card["cmc"]
+      card_params["color_identity"] = card["colorIdentity"]
+      card_params["colors"] = card["colors"]
+      card_params["flavor"] = card["flavor"]
+      card_params["image_name"] = card["imageName"]
+      card_params["layout"] = card["layout"]
+      card_params["mana_cost"] = card["manaCost"]
+      card_params["names"] = card["names"]
+      card_params["number"] = card["mciNumber"]
+      card_params["multiverse_id"] = card["multiverseId"]
+      card_params["name"] = card["name"]
+      card_params["power"] = card["power"]
+      card_params["rarity"] = card["rarity"]
+      card_params["subtypes"] = card["subtypes"]
+      card_params["text"] = card["text"]
+      card_params["toughness"] = card["toughness"]
+      card_params["type"] = card["type"]
+      card_params["types"] = card["types"]
+      card_params["plaintext_name"] = ActiveSupport::Inflector.transliterate(card["name"].downcase.gsub(/[^a-z0-9\s\"]/i, ''))
+      card = Card.create(card_params)
+      sett.cards << card
+      card.update_attributes(image: card.make_pic_url, setname: card.sett.name)
+    end
+  end
+
+  def json_to_hash(filename)
+    data = {}
+    File.open(filename) do |f|
+      data = JSON.parse(f.read)
+    end
+    data
+  end
+
 end
 

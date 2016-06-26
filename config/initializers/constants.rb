@@ -41,6 +41,26 @@ SINGLES_SMARTHEADERS = [
   "ShippingCostPaidByOption=Buyer"
 ]
 
+LOT_SMARTHEADERS = [
+  "ConditionID=3000",
+  "Format=FixedPrice",
+  "Duration=30",
+  "Location=56686",
+  "ShippingType=Flat",
+  "ShipToLocations=US",
+  "ShippingService-1:Option=USPSFirstClass",
+  "ShippingService-1:Cost=0",
+  "ShippingService-1:FreeShipping=1",
+  "ShippingService-1:AdditionalCost=0",
+  "DispatchTimeMax=1",
+  "PayPalAccepted=1",
+  "PayPalEmailAddress=awkwardmelon@gmail.com",
+  "RefundOption=MoneyBackOrReplacement",
+  "ReturnsAcceptedOption=ReturnsAccepted",
+  "ReturnsWithinOption=Days_14",
+  "ShippingCostPaidByOption=Buyer"
+]
+
 AUCTION_SMARTHEADERS = [
   "ConditionID=3000",
   "Format=Auction",

@@ -14,10 +14,14 @@ class ListingsController < ApplicationController
   end
 
   def create
-    card = Card.where(name: listing_params['title'], setname: listing_params['series']).first
-    @listing = Listing.create(listing_params)
-    binding.pry
-    @listing.cards << card
+    if listing_params['listing_type'] == 'lot'
+      @listing = Listing.create(listing_params)
+      @listing.update_attribute(:listing_type, 'lot')
+    else
+      card = Card.where(name: listing_params['title'], setname: listing_params['series']).first
+      @listing = Listing.create(listing_params)
+      @listing.cards << card
+    end
     redirect_to listings_url
   end
 
@@ -43,6 +47,8 @@ class ListingsController < ApplicationController
     # kludge
     if Listing.where(listed?: false).last.listing_type == "auction"
       a.make_auction_csv("Add")
+    elsif Listing.where(listed?: false).last.listing_type == "lot"
+      a.make_lot_csv("Add")
     else
       a.make_singles_csv("Add")
     end
@@ -52,7 +58,7 @@ class ListingsController < ApplicationController
   private
 
   def listing_params
-    params.require(:listing).permit(:listing_type, :title, :series, :number, :quantity, :price, :condition, :foil)
+    params.require(:listing).permit(:listing_type, :notes, :title, :series, :number, :quantity, :price, :condition, :foil)
   end
 
 end

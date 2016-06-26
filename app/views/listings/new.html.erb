@@ -2,7 +2,7 @@
   <%= form_for @listing do |f| %>
 
     <%= f.label :title %>:
-    <%= f.text_field :title, autofocus: true %><br><div class="spacer"></div>
+    <%= f.text_field :title, autofocus: true, maxlength: 80 %><br><div class="spacer"></div>
 
     <%= f.label :series %>:
     <%= f.text_field :series %><br><div class="spacer"></div>
@@ -22,6 +22,12 @@
 
       <%= f.label :price %>:
       <%= f.text_field :price %><br><div class="spacer"></div>
+
+      <%= f.label :pic_url %>:
+      <%= f.text_field :pic_url %><br><div class="spacer"></div>
+
+      <%= f.label :type %>:
+      <%= f.text_field :listing_type, value: "lot" %><br><div class="spacer"></div>
     <%end%>
 
     <% if @listing.listing_type == "auction" %>
