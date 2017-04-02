@@ -28,19 +28,19 @@ class Listing < ActiveRecord::Base
   def make_category
     card = cards.first
     if foil
-      "49181"
+      "38292"
     elsif card.type.include? "Artifact"
-      "158760"
+      "38292"
     elsif card.type.include? "Land"
-      "19115"
+      "38292"
     elsif card.colors
       if card.colors.count > 1
-        "158759"
+        "38292"
       else
         CATEGORIES[card.colors.first.to_sym]
       end
     else
-      "19115"
+      "38292"
     end
   end
 

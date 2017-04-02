@@ -7,14 +7,14 @@ CONDITIONS = {
 }
 
 CATEGORIES = {
-'Black': '158756',
-'Blue': '158755',
-'Green': '158758',
-'Red': '158757',
-'White': '158754',
-'Artifact': '158760',
-'Gold': '158759',
-'Land': '19115'
+'Black': '38292',
+'Blue': '38292',
+'Green': '38292',
+'Red': '38292',
+'White': '38292',
+'Artifact': '38292',
+'Gold': '38292',
+'Land': '38292'
 }
 
 SINGLES_SMARTHEADERS = [

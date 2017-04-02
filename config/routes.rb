@@ -6,5 +6,6 @@ Rails.application.routes.draw do
   resources :cards
   resources :dards
   resources :setts
-  root to: "home#index"
+  resources :evaluator
+  root to: "home#listings"
 end

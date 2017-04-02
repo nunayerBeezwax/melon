@@ -19,7 +19,7 @@ class Ebaygent
     CSV.open("listings_#{Time.now.to_i}.csv", "wb") do |csv|
       csv << [SINGLES_HEADERS, LOT_SMARTHEADERS].flatten
       Listing.where(listed?: false).each do |l|
-        array = [action, '19115', l.pic_url, l.title, l.make_description, l.quantity, l.price]
+        array = [action, '38292', l.pic_url, l.title, l.make_description, l.quantity, l.price]
         csv << array
         # technically false, it has only been put in the csv, not put on ebay... should fix?
         l.update_column(:listed?, true) if action == "Add"
